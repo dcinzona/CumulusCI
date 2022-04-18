@@ -277,7 +277,10 @@ version_id: 04t000000000000"""
         resolver = GitHubBetaReleaseTagResolver()
 
         assert resolver.can_resolve(dep, project_config)
-        assert resolver.resolve(dep, project_config) == (
+        resolved = resolver.resolve(dep, project_config)
+        print(f"{resolved=}")
+
+        assert resolved == (
             "tag_sha",
             PackageNamespaceVersionDependency(
                 namespace="ccitestdep",
