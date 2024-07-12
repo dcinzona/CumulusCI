@@ -8,7 +8,7 @@ from typing import List, Optional
 from pydantic import BaseModel, validator
 from simple_salesforce.exceptions import SalesforceMalformedRequest
 
-from cumulusci.core.config.util import get_devhub_config
+from cumulusci.core.config.util import get_devhub_config, save_project_package_aliases
 from cumulusci.core.dependencies.dependencies import (
     PackageNamespaceVersionDependency,
     PackageVersionIdDependency,
@@ -150,6 +150,10 @@ class CreatePackageVersion(BaseSalesforceApiTask):
             "description": "If True, create unlocked packages for unpackaged metadata in this project and dependencies. "
             "Defaults to False."
         },
+        "update_aliases": {
+            "description": "If True, update the project's packageAliases with the new package version. "
+            "Defaults to False."
+        },
     }
 
     def _init_options(self, kwargs):
@@ -193,6 +197,9 @@ class CreatePackageVersion(BaseSalesforceApiTask):
         )
         self.options["create_unlocked_dependency_packages"] = process_bool_arg(
             self.options.get("create_unlocked_dependency_packages") or False
+        )
+        self.options["update_aliases"] = process_bool_arg(
+            self.options.get("update_aliases") or False
         )
 
     def _init_task(self):
@@ -285,6 +292,21 @@ class CreatePackageVersion(BaseSalesforceApiTask):
         )
         self.logger.info(f"  Version Number: {self.return_values['version_number']}")
         self.logger.info(f"  Dependencies: {self.return_values['dependencies']}")
+        self._save_aliases()
+
+    def _save_aliases(self):
+        if self.options["update_aliases"]:
+            self.logger.info("Saving package aliases")
+            # Save the package alias
+            versionAlias = f"{self.package_config.package_name}@{self.return_values['version_number']}"
+            package_aliases = self.project_config.sfdx_project_config.get(
+                "packageAliases", {}
+            )
+            package_aliases.update({self.package_config.package_name: self.package_id})
+            package_aliases.update(
+                {versionAlias: self.return_values["subscriber_package_version_id"]}
+            )
+            save_project_package_aliases(self.project_config, package_aliases)
 
     def _get_or_create_package(self, package_config: PackageConfig):
         """Find or create the Package2

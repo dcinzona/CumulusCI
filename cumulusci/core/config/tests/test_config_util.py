@@ -8,7 +8,7 @@ import yaml
 
 from cumulusci.core.config import ServiceConfig, SfdxOrgConfig, UniversalConfig
 from cumulusci.core.config.project_config import BaseProjectConfig
-from cumulusci.core.config.util import get_devhub_config
+from cumulusci.core.config.util import get_devhub_config, save_project_package_aliases
 from cumulusci.core.keychain import BaseProjectKeychain
 from cumulusci.utils import temporary_dir, touch
 
@@ -89,3 +89,22 @@ def test_get_devhub_config__from_service(project_config, org_config):
     )
     devhub_config = get_devhub_config(project_config)
     assert devhub_config.username == "devhub@example.com"
+
+
+class TestConfigUtilPackaging:
+    def test_save_project_package_aliases(self):
+
+        with temporary_dir() as path:
+            pathlib.Path(path, ".git").mkdir()
+            with pathlib.Path(path, "cumulusci.yml").open("w") as f:
+                yaml.dump({"project": {"source_format": "sfdx"}}, f)
+            with pathlib.Path(path, "sfdx-project.json").open("w") as f:
+                json.dump(
+                    {"packageDirectories": [{"path": "force-app", "default": True}]}, f
+                )
+            config = BaseProjectConfig(UniversalConfig())
+            save_project_package_aliases(config, {"foo": "bar"})
+            assert config.sfdx_project_config == json.load(
+                open(pathlib.Path(path, "sfdx-project.json"))
+            )
+            assert {"foo": "bar"} == config.sfdx_project_config["packageAliases"]

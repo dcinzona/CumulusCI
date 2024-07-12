@@ -92,6 +92,9 @@ def project_config(repo_root):
             }
         )
     )
+    pathlib.Path(repo_root, "sfdx-project.json").write_text(
+        json.dumps({"packageDirectories": [{"path": "force-app", "default": True}]})
+    )
 
     project_config.get_github_api = mock.Mock()
 
@@ -109,6 +112,7 @@ def get_task(project_config, devhub_config, org_config):
             "ancestor_id": "04t000000000000",
             "create_unlocked_dependency_packages": True,
             "install_key": "foo",
+            "update_aliases": True,
         }
         task = CreatePackageVersion(
             project_config,
@@ -477,6 +481,19 @@ class TestCreatePackageVersion:
             {"version_id": "04t000000000009AAA"}
         ]
         assert task.return_values["install_key"] == task.options["install_key"]
+
+        # Check that aliases were saved
+        assert (
+            task.project_config.sfdx_project_config["packageAliases"]["Test Package"]
+            == "0Ho6g000000fy4ZCAQ"
+        ), task.project_config.sfdx_project_config["packageAliases"]
+        assert (
+            task.project_config.sfdx_project_config["packageAliases"][
+                "Test Package@1.0.0.1"
+            ]
+            == "04t000000000002AAA"
+        ), task.project_config.sfdx_project_config["packageAliases"]
+
         zf.close()
 
     @responses.activate
