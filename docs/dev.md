@@ -61,8 +61,7 @@ The [](retrieve-changes) task supports both
 Salesforce DX and Metadata API-format source code. It utilizes the
 [SourceMember](https://developer.salesforce.com/docs/atlas.en-us.api_tooling.meta/api_tooling/tooling_api_objects_sourcemember.htm)
 `sObject` to detect what has changed in an org, and also gives you
-discretion regarding which components are retrieved when compared to the
-[](dx-pull) task.
+discretion regarding which components are retrieved.
 
 To retrieve _all_ changes in an org:
 
@@ -161,14 +160,7 @@ code and metadata stored in the repository. After making changes in an
 editor, push these changes from your project's local repository to the
 target org.
 
-If your project uses the Salesforce DX source format, use the
-[](dx-push) task.
-
-```console
-$ cci task run dx_push
-```
-
-If your project uses the Metadata API source format, use the
+To push your changes, use the
 [](deploy) task:
 
 ```console
