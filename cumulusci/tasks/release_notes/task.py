@@ -141,7 +141,7 @@ class ParentPullRequestNotes(BaseGithubTask):
 
     If you have a pull request on branch feature/myFeature that you would like to rebuild notes
     for use the branch_name and force options:
-        cci task run github_parent_pr_notes --branch-name feature/myFeature --force True
+    - cci task run github_parent_pr_notes --branch-name feature/myFeature --force True
     """
     UNAGGREGATED_PR_HEADER = "\r\n\r\n# Unaggregated Pull Requests"
 

@@ -723,7 +723,7 @@ in your cumulusci.yml file.
 
 ### Customizing Metadata Deployment
 
-CumulusCI's `deploy` task offers deep flexibility to customize your deployment process. Review [](deploy) for an in-depth guide.
+CumulusCI's `deploy` task offers deep flexibility to customize your deployment process. Review [](configure-metadata-deployment) for an in-depth guide.
 
 ```{toctree}
 ---

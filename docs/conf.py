@@ -222,6 +222,8 @@ html_extra_path = ["robot"]
 # This is the file name suffix for HTML files (e.g. ".xhtml").
 # html_file_suffix = None
 
+suppress_warnings = ["ref.duplicate_label"]
+
 # Output file base name for HTML help builder.
 htmlhelp_basename = "cumuluscidoc"
 
@@ -231,13 +233,10 @@ latex_engine = "xelatex"
 
 
 latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
-    # 'papersize': 'letterpaper',
-    # The font size ('10pt', '11pt' or '12pt').
-    # 'pointsize': '10pt',
-    # Additional stuff for the LaTeX preamble.
-    # 'preamble': '',
+    'preamble': r'''\renewcommand{\familydefault}{\sfdefault}  % Set default font to sans-serif
+''',
 }
+
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass
@@ -247,13 +246,12 @@ latex_documents = [
         "index",
         "cumulusci.tex",
         "CumulusCI Documentation",
-        """Kamalnath Devarakonda\\\\
-Sr Director Software Engineering\\\\
-kdevarakonda@salesforce.com""",
+        r'Cumulus Suite Development Team\\\texttt{sfdo-mrbelvedere@salesforce.com}',
         "manual",
     )
 ]
 
+exclude_patterns = ['history.md']  # Ensures history.md is excluded
 # The name of an image file (relative to this directory) to place at
 # the top of the title page.
 # latex_logo = None

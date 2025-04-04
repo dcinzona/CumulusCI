@@ -161,7 +161,7 @@ editor, push these changes from your project's local repository to the
 target org.
 
 To push your changes, use the
-[](deploy) task:
+[deploy](configure-metadata-deployment) task:
 
 ```console
 $ cci task run deploy
@@ -169,7 +169,7 @@ $ cci task run deploy
 
 The `deploy` task has _many_ options for handling a number of different
 scenarios. For a comprehensive list of options, see the
-[](deploy) task reference.
+[deploy](configure-metadata-deployment) task reference.
 
 ## Run Apex Tests
 
