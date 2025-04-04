@@ -100,6 +100,10 @@ release = cumulusci.__version__
 # directories to ignore when looking for source files.
 exclude_patterns = ["_build", "*/tests/"]
 
+# Exclude 'history.md' only in LaTeX builds
+if os.environ.get("SPHINX_OUTPUT_FORMAT") == "latex":
+    exclude_patterns.append("history.md")
+
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
 # default_role = None
@@ -251,7 +255,6 @@ latex_documents = [
     )
 ]
 
-exclude_patterns = ['history.md']  # Ensures history.md is excluded
 # The name of an image file (relative to this directory) to place at
 # the top of the title page.
 # latex_logo = None
